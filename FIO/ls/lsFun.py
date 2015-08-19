@@ -4,7 +4,7 @@
 #import sys;
 #import glob;
 
-k=1024
+k=float(1024)
 import os, sys, time;
 
 def translateUnit(bits):

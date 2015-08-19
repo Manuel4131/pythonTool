@@ -3,7 +3,21 @@
 #import os;
 #import sys;
 #import glob;
+
+k=1024
 import os, sys, time;
+
+def translateUnit(bits):
+	bits=int(bits)
+	d=0
+	units=('B','K','M','G')
+	while bits >= 1024:			
+		bits/=k
+		d=d+1
+	print "bis are:", bits
+	print "degree is: ", units[d]
+	
+
 
 def getDirSize(targetPath):
 	totalSize=0
@@ -24,6 +38,8 @@ def ls(targetPath):
 	elif os.path.isdir(targetPath):	
 		printDir(targetPath)
 
-targetPath=sys.argv[1]
-ls(targetPath)
+# targetPath=sys.argv[1]
+# ls(targetPath)
+val=sys.argv[1]
+translateUnit(val)
 

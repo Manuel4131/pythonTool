@@ -8,16 +8,15 @@ k=float(1024)
 import os, sys, time;
 
 def translateUnit(bits):
-	bits=int(bits)
+	bits=float(bits)
 	d=0
 	units=('B','K','M','G','T')
 	while bits >= 1024:			
 		bits/=k
 		d=d+1
+
+	bits=round(bits,2)
 	return repr(bits) + units[0]
-	# return 
-	# print "bis are:", bits
-	# print "degree is: ", units[d]
 	
 def getDirSize(targetPath):
 	totalSize=0

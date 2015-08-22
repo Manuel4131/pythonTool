@@ -7,6 +7,9 @@
 k=float(1024)
 import os, sys, time;
 
+def getPermission(file):
+	return oct(os.stat(file).st_mode)[-3:]
+
 def translateUnit(bits):
 	bits=float(bits)
 	d=0
@@ -26,10 +29,10 @@ def getDirSize(targetPath):
 	return totalSize
 
 def printFile(targetPath):
-	print "{:>10} {:>8} {:>20}".format(targetPath, translateUnit(os.path.getsize(targetPath)), time.ctime(os.path.getatime(targetPath)))
+	print "{:>10} {:>10} {:>8} {:>20}".format(getPermission(targetPath), targetPath, translateUnit(os.path.getsize(targetPath)), time.ctime(os.path.getatime(targetPath)))
 
 def printDir(targetPath):
-	print "{:>10} {:>8} {:>20}".format(targetPath, translateUnit(getDirSize(targetPath)), time.ctime(os.path.getatime(targetPath)))	
+	print "{:>10} {:>10} {:>8} {:>20}".format(getPermission(targetPath),targetPath, translateUnit(getDirSize(targetPath)), time.ctime(os.path.getatime(targetPath)))	
 	
 def ls(targetPath):	
 	if os.path.isfile(targetPath):

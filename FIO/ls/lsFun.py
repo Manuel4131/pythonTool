@@ -8,7 +8,12 @@ k=float(1024)
 import os, sys, time;
 
 def getPermission(file):
-	return oct(os.stat(file).st_mode)[-3:]
+	perSt=""
+	perNum=oct(os.stat(file).st_mode)[-3:]
+	t=('--x','-w-','-wx','r--','r-x','rw-','rwx')
+	for i in range(0,3):
+		perSt+=t[int(perNum[i]) -1]
+	return perSt
 
 def translateUnit(bits):
 	bits=float(bits)

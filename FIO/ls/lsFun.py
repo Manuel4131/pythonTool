@@ -46,14 +46,41 @@ def printFile(targetPath):
 def printDir(targetPath):
 	print "{:>10} {:>10} {:>8} {:>20}".format(getPermission(targetPath),targetPath, translateUnit(getDirSize(targetPath)), time.ctime(os.path.getatime(targetPath)))	
 	
-def ls(targetPath):	
-	if os.path.isfile(targetPath):
-		printFile(targetPath)
-	elif os.path.isdir(targetPath):	
-		printDir(targetPath)
+# def ls(targetPath):
+# 	if os.path.isfile(targetPath):
+# 		printFile(targetPath)
+# 	elif os.path.isdir(targetPath):
+# 			printDir(item)
 
-targetPath=sys.argv[1]
-ls(targetPath)
+# targetPath=sys.argv[1]
+# ls(targetPath
 # val=sys.argv[1]
 # translateUnit(val)
 
+def ls(argv):
+	argvLength= len(argv)
+# input format check and pass to corresponding function.
+	if argv[1][0]=='-' and argvLength == 2:
+		print "no target file"
+	elif argv[1][0]=='-' and argvLength == 3:
+		print "Target file"
+	else:
+		print "list file names only"
+
+# Print main function
+def printOutput(option, target):
+	itemList= os.listdir(target)
+	if "a" not in option:
+		removeHiddenFile(items)
+		
+
+
+
+
+
+def removeHiddenFile(list):
+	newList=[]
+	newList[:]= [x for x in list if not x.startswith('.')]
+	return newList
+
+ls(sys.argv)

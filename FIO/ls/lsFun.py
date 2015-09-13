@@ -76,24 +76,26 @@ def ls(argv):
 def printOutput(option, target):
 	itemList= os.listdir(target)	# Change itemList to object list
 	deli=','
-	initValue="True,True,False,False,False,False"
+	# use enum or dict instead, plz
+	showHiddenItem, nameOnly, sortByTime, sortByDescOrder, humanRead, reverseOrder= 'y', 'y', 'n', 'n', 'n', 'n'
+	initValue = showHiddenItem + deli + nameOnly + deli + sortByTime + deli	+ sortByDescOrder + deli + humanRead + deli	+ reverseOrder
 	arg=Arg(initValue)
-	print "arg.showHiddenItem", arg.showHiddenItem
-
+	print arg.humanRead
 	if "a" not in option:
-		showHiddenItem=False
+		showHiddenItem='n'
 		# itemList= removeHiddenFile(itemList)
 	if "l" in option:
-		nameOnly=False
+		nameOnly='n'
 		if "t" in option:
-			sortByTime=True
-			sortByDescOrder=True
+			sortByTime='y'
+			sortByDescOrder='y'
 		if "h" in option:
-			humanRead=True
+			humanRead='y'
 			
 		if "r" in option:
-			reverseOrder=True
+			reverseOrder='y'
 	
+	resultValue = showHiddenItem + deli + nameOnly + deli + sortByTime + deli	+ sortByDescOrder + deli + humanRead + deli	+ reverseOrder
 	# arglist= showHiddenItem + deli + nameOnly;
 
 # def printResult(showHiddenItem, nameOnly, sortByTime, reverseOrder, reverseOrder, sortByTime, humanRead):
@@ -112,8 +114,9 @@ class Arg(object):
 	def __init__(self,argvlist):
 		# self.showHiddenItem, self.nameOnly, self.sortByTime=showHiddenItem, nameOnly, sortByTime
 		# self.reverseOrder, self.sortByDescOrder, self.humanRead=reverseOrder,sortByDescOrder,humanRead
-		self.showHiddenItem, self.nameOnly, self.sortByTime, self.reverseOrder, self.sortByDescOrder, self.humanRead=argvlist.split(',')
-	# print self.showHiddenItem		
+		self.showHiddenItem, self.nameOnly, self.sortByTime, self.sortByDescOrder, self.reverseOrder, self.humanRead=argvlist.split(',')
+	
+	# print self.showHiddenItem		# Why can't I call the self.showHiddenItem value in class scope?
 	
 
 

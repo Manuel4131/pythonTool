@@ -57,11 +57,16 @@ def printDir(targetPath):
 # val=sys.argv[1]
 # translateUnit(val)
 
+def printNameOnly(list):
+		print "{:>4}".format()
+	
+
 def ls(argv):
 	argvLength= len(argv)
 # input format check and pass to corresponding function.
 	if argv[1][0]=='-' and argvLength == 2:
 		print "no target file"
+		printOutput(argv[1], '.')
 	elif argv[1][0]=='-' and argvLength == 3:
 		print "Target file"
 	else:
@@ -69,12 +74,27 @@ def ls(argv):
 
 # Print main function
 def printOutput(option, target):
-	itemList= os.listdir(target)
+	itemList= os.listdir(target)	# Change itemList to object list
+	nameOnly=True
+	humanRead=False
+	sortByTime=False
+	sortByDescOrder=False
+	reverseOrder=False
 	if "a" not in option:
-		removeHiddenFile(items)
-		
+		itemList= removeHiddenFile(itemList)
+	if "l" in option:
+		nameOnly=False
+		if "t" in option:
+			sortByDescOrder=True
+		if "h" in option:
+			humanRead=True
+			
+		if "r" in option:
+			reverseOrder=True
+	# print "nameOnly is: {0}", nameOnly
 
-
+def printResult():
+	pass
 
 
 
@@ -82,5 +102,6 @@ def removeHiddenFile(list):
 	newList=[]
 	newList[:]= [x for x in list if not x.startswith('.')]
 	return newList
+
 
 ls(sys.argv)

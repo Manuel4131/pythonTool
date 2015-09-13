@@ -75,13 +75,17 @@ def ls(argv):
 # Print main function
 def printOutput(option, target):
 	itemList= os.listdir(target)	# Change itemList to object list
+	
+	showHiddenItem=True
 	nameOnly=True
-	humanRead=False
 	sortByTime=False
-	sortByDescOrder=False
 	reverseOrder=False
+	sortByDescOrder=False
+	humanRead=False
+
 	if "a" not in option:
-		itemList= removeHiddenFile(itemList)
+		showHiddenItem=False
+		# itemList= removeHiddenFile(itemList)
 	if "l" in option:
 		nameOnly=False
 		if "t" in option:
@@ -92,6 +96,7 @@ def printOutput(option, target):
 		if "r" in option:
 			reverseOrder=True
 	# print "nameOnly is: {0}", nameOnly
+		argumentlist= 
 
 def printResult():
 	pass
@@ -102,6 +107,11 @@ def removeHiddenFile(list):
 	newList=[]
 	newList[:]= [x for x in list if not x.startswith('.')]
 	return newList
+
+class Argument:
+	command="ls"
+	def __init__(self, argumentlist):
+
 
 
 ls(sys.argv)

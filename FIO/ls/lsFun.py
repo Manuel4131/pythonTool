@@ -4,9 +4,9 @@
 #import sys;
 #import glob;
 
-k=float(1024)
 import os, sys, time;
 
+k=float(1024)
 def getPermission(file):
 	perSt=""
 	if os.path.isdir(file):
@@ -75,13 +75,10 @@ def ls(argv):
 # Print main function
 def printOutput(option, target):
 	itemList= os.listdir(target)	# Change itemList to object list
-	
-	showHiddenItem=True
-	nameOnly=True
-	sortByTime=False
-	reverseOrder=False
-	sortByDescOrder=False
-	humanRead=False
+	deli=','
+	initValue="True,True,False,False,False,False"
+	arg=Arg(initValue)
+	print "arg.showHiddenItem", arg.showHiddenItem
 
 	if "a" not in option:
 		showHiddenItem=False
@@ -89,17 +86,18 @@ def printOutput(option, target):
 	if "l" in option:
 		nameOnly=False
 		if "t" in option:
+			sortByTime=True
 			sortByDescOrder=True
 		if "h" in option:
 			humanRead=True
 			
 		if "r" in option:
 			reverseOrder=True
-	# print "nameOnly is: {0}", nameOnly
-		argumentlist= 
+	
+	# arglist= showHiddenItem + deli + nameOnly;
 
-def printResult():
-	pass
+# def printResult(showHiddenItem, nameOnly, sortByTime, reverseOrder, reverseOrder, sortByTime, humanRead):
+# 	pass 
 
 
 
@@ -108,10 +106,15 @@ def removeHiddenFile(list):
 	newList[:]= [x for x in list if not x.startswith('.')]
 	return newList
 
-class Argument:
-	command="ls"
-	def __init__(self, argumentlist):
+class Arg(object):
 
+	command="ls"
+	def __init__(self,argvlist):
+		# self.showHiddenItem, self.nameOnly, self.sortByTime=showHiddenItem, nameOnly, sortByTime
+		# self.reverseOrder, self.sortByDescOrder, self.humanRead=reverseOrder,sortByDescOrder,humanRead
+		self.showHiddenItem, self.nameOnly, self.sortByTime, self.reverseOrder, self.sortByDescOrder, self.humanRead=argvlist.split(',')
+	# print self.showHiddenItem		
+	
 
 
 ls(sys.argv)

@@ -57,8 +57,8 @@ def printDir(targetPath):
 # val=sys.argv[1]
 # translateUnit(val)
 
-def printNameOnly(list):
-		print "{:>4}".format()
+# def printNameOnly(list):
+# 		print "{:>4}".format()
 	
 
 def ls(argv):
@@ -78,9 +78,9 @@ def printOutput(option, target):
 	deli=','
 	# use enum or dict instead, plz
 	showHiddenItem, nameOnly, sortByTime, sortByDescOrder, humanRead, reverseOrder= 'y', 'y', 'n', 'n', 'n', 'n'
-	initValue = showHiddenItem + deli + nameOnly + deli + sortByTime + deli	+ sortByDescOrder + deli + humanRead + deli	+ reverseOrder
-	arg=Arg(initValue)
-	print arg.humanRead
+	# initValue = showHiddenItem + deli + nameOnly + deli + sortByTime + deli	+ sortByDescOrder + deli + humanRead + deli	+ reverseOrder
+	# arg=Arg(initValue)
+	# print arg.humanRead
 	if "a" not in option:
 		showHiddenItem='n'
 		# itemList= removeHiddenFile(itemList)
@@ -95,13 +95,14 @@ def printOutput(option, target):
 		if "r" in option:
 			reverseOrder='y'
 	
-	resultValue = showHiddenItem + deli + nameOnly + deli + sortByTime + deli	+ sortByDescOrder + deli + humanRead + deli	+ reverseOrder
+	resultValue = showHiddenItem + deli + nameOnly + deli + sortByTime + deli	+ sortByDescOrder  + deli	+ reverseOrder + deli + humanRead
+	arg=Arg(resultValue)
+	print "arg.reverseOrder is: ", arg.reverseOrder
+
 	# arglist= showHiddenItem + deli + nameOnly;
 
 # def printResult(showHiddenItem, nameOnly, sortByTime, reverseOrder, reverseOrder, sortByTime, humanRead):
 # 	pass 
-
-
 
 def removeHiddenFile(list):
 	newList=[]
@@ -117,7 +118,8 @@ class Arg(object):
 		self.showHiddenItem, self.nameOnly, self.sortByTime, self.sortByDescOrder, self.reverseOrder, self.humanRead=argvlist.split(',')
 	
 	# print self.showHiddenItem		# Why can't I call the self.showHiddenItem value in class scope?
-	
+	def setVar(self,argvlist):
+		showHiddenItem, nameOnly, sortByTime, sortByDescOrder, reverseOrder, humanRead=argvlist.split(',')
 
 
 ls(sys.argv)

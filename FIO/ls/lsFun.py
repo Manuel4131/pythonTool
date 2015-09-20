@@ -57,24 +57,31 @@ def printDir(targetPath):
 # val=sys.argv[1]
 # translateUnit(val)
 
-# def printNameOnly(list):
-# 		print "{:>4}".format()
-	
+def printFormat(args, path):
+	items = os.listdir(path)
+	if args.showHiddenItem == 'n':
+		items = removeHiddenFile(items)
+
+	if args.nameOnly == 'y':
+		for item in items:
+			print ('%10s') % (item),
+
 
 def ls(argv):
 	argvLength= len(argv)
 # input format check and pass to corresponding function.
 	if argv[1][0]=='-' and argvLength == 2:
 		print "no target file"
-		printOutput(argv[1], '.')
+		printFormat( setargument(argv[1]),'.')
+
 	elif argv[1][0]=='-' and argvLength == 3:
 		print "Target file"
 	else:
 		print "list file names only"
 
 # Print main function
-def printOutput(option, target):
-	itemList= os.listdir(target)	# Change itemList to object list
+def setargument(option):
+	# itemList= os.listdir(target)	# Change itemList to object list
 	deli=','
 	# use enum or dict instead, plz
 	showHiddenItem, nameOnly, sortByTime, sortByDescOrder, humanRead, reverseOrder= 'y', 'y', 'n', 'n', 'n', 'n'
@@ -95,31 +102,28 @@ def printOutput(option, target):
 		if "r" in option:
 			reverseOrder='y'
 	
-	resultValue = showHiddenItem + deli + nameOnly + deli + sortByTime + deli	+ sortByDescOrder  + deli	+ reverseOrder + deli + humanRead
+	resultValue = showHiddenItem + deli + nameOnly + deli + sortByTime + deli + sortByDescOrder  + deli	+ reverseOrder + deli + humanRead
 	arg=Arg(resultValue)
-	print "arg.reverseOrder is: ", arg.reverseOrder
-
-	# arglist= showHiddenItem + deli + nameOnly;
-
-# def printResult(showHiddenItem, nameOnly, sortByTime, reverseOrder, reverseOrder, sortByTime, humanRead):
-# 	pass 
-
-def removeHiddenFile(list):
-	newList=[]
-	newList[:]= [x for x in list if not x.startswith('.')]
-	return newList
+	return arg
 
 class Arg(object):
 
 	command="ls"
 	def __init__(self,argvlist):
-		# self.showHiddenItem, self.nameOnly, self.sortByTime=showHiddenItem, nameOnly, sortByTime
-		# self.reverseOrder, self.sortByDescOrder, self.humanRead=reverseOrder,sortByDescOrder,humanRead
 		self.showHiddenItem, self.nameOnly, self.sortByTime, self.sortByDescOrder, self.reverseOrder, self.humanRead=argvlist.split(',')
 	
 	# print self.showHiddenItem		# Why can't I call the self.showHiddenItem value in class scope?
 	def setVar(self,argvlist):
 		showHiddenItem, nameOnly, sortByTime, sortByDescOrder, reverseOrder, humanRead=argvlist.split(',')
 
+def removeHiddenFile(list):
+	newList=[]
+	newList[:]= [x for x in list if not x.startswith('.')]
+	return newList
 
 ls(sys.argv)
+
+
+
+
+	

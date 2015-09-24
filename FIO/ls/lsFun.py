@@ -7,19 +7,17 @@
 import os, sys, time;
 
 k=float(1024)
-def getPermission(file):
+def getPermission(file, type):
 	perSt=""
-	if os.path.isdir(file):
+	if type:
 		perSt='d'
-	elif os.path.isfile(file):
+	else :
 		perSt='-'
         
 	perNum=oct(os.stat(file).st_mode)[-3:]
 	t=('--x','-w-','-wx','r--','r-x','rw-','rwx')
 	for i in range(0,3):
 		perSt+=t[int(perNum[i]) -1]
-    
-
 	return perSt
 
 def translateUnit(bits):
@@ -33,29 +31,41 @@ def translateUnit(bits):
 	bits=round(bits,2)
 	return repr(bits) + units[0]
 	
-def getDirSize(targetPath):
+	# more case: the item may contain '/''
+def getDirSize(targetPath):		
 	totalSize=0
+	# print "targetPath", targetPath
 	for rootDir, subDir, subFile in os.walk(targetPath):
 		for file in subFile:
 			totalSize += os.path.getsize(os.path.join(rootDir,file))
 	return totalSize
 
-def printFile(targetPath):
-	print "{:>10} {:>10} {:>8} {:>20}".format(getPermission(targetPath), targetPath, translateUnit(os.path.getsize(targetPath)), time.ctime(os.path.getatime(targetPath)))
+def printFile(targetPath,file):
+	print "{:>10} {:>10} {:>8} {:>20}".format(getPermission(targetPath,0), file, translateUnit(os.path.getsize(targetPath)), time.ctime(os.path.getatime(targetPath)))
 
-def printDir(targetPath):
-	print "{:>10} {:>10} {:>8} {:>20}".format(getPermission(targetPath),targetPath, translateUnit(getDirSize(targetPath)), time.ctime(os.path.getatime(targetPath)))	
+def printDir(targetPath,dir):
+	print "{:>10} {:>10} {:>8} {:>20}".format(getPermission(targetPath,1), dir + '/', translateUnit(getDirSize(targetPath)), time.ctime(os.path.getatime(targetPath)))	
 	
 # def ls(targetPath):
-# 	if os.path.isfile(targetPath):
-# 		printFile(targetPath)
-# 	elif os.path.isdir(targetPath):
-# 			printDir(item)
+	# if os.path.isfile(targetPath):
+	# 	printFile(targetPath)
+	# elif os.path.isdir(targetPath):
+	# 		printDir(item)
 
 # targetPath=sys.argv[1]
 # ls(targetPath
 # val=sys.argv[1]
 # translateUnit(val)
+
+
+def createAbspath(list):
+	absPath = []
+	i = 0
+	while i < len(list):
+		absPath.append( os.path.abspath(list[i]))
+		# print os.path.abspath(list[i])	
+		i+=1
+	return absPath
 
 def printFormat(args, path):
 	items = os.listdir(path)
@@ -64,8 +74,15 @@ def printFormat(args, path):
 
 	if args.nameOnly == 'y':
 		for item in items:
-			print ('%10s') % (item),
-
+			print (('%s') % (item + '\t'))
+	
+	elif args.nameOnly == 'n':
+		abspath = createAbspath(items)
+		for i in range(0, len(items)):
+			if os.path.isfile(abspath[i]):
+				printFile(abspath[i],items[i])
+			elif os.path.isdir(abspath[i]):
+				printDir(abspath[i],items[i])
 
 def ls(argv):
 	argvLength= len(argv)

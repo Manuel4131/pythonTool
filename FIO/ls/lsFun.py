@@ -4,7 +4,7 @@
 #import sys;
 #import glob;
 
-import os, sys, time;
+import os, sys, time, inspect;
 
 k=float(1024)
 def getPermission(file, type):
@@ -41,7 +41,8 @@ def getDirSize(targetPath):
 	return totalSize
 
 def printFile(targetPath,file):
-	print "{:>10} {:>10} {:>8} {:>20}".format(getPermission(targetPath,0), file, translateUnit(os.path.getsize(targetPath)), time.ctime(os.path.getatime(targetPath)))
+	print (('%s') % (getPermission(targetPath,0) + '\t')), (('%s') % (file +'\t')), ( ('%s') % ( translateUnit(os.path.getsize(targetPath))) + '\t' ), ( ('%s') % ( time.ctime(os.path.getatime(targetPath))) + '\t' )
+	# print "{:>10} {:>10} {:>8} {:>20}".format(getPermission(targetPath,0), file, translateUnit(os.path.getsize(targetPath)), time.ctime(os.path.getatime(targetPath)))
 
 def printDir(targetPath,dir):
 	print "{:>10} {:>10} {:>8} {:>20}".format(getPermission(targetPath,1), dir + '/', translateUnit(getDirSize(targetPath)), time.ctime(os.path.getatime(targetPath)))	
@@ -69,6 +70,8 @@ def createAbspath(list):
 
 def printFormat(args, path):
 	items = os.listdir(path)
+	# create item objects
+
 	if args.showHiddenItem == 'n':
 		items = removeHiddenFile(items)
 
@@ -84,12 +87,14 @@ def printFormat(args, path):
 			elif os.path.isdir(abspath[i]):
 				printDir(abspath[i],items[i])
 
+
 def ls(argv):
 	argvLength= len(argv)
 # input format check and pass to corresponding function.
 	if argv[1][0]=='-' and argvLength == 2:
 		print "no target file"
-		printFormat( setargument(argv[1]),'.')
+
+		printFormat(setargument(argv[1]),'.')
 
 	elif argv[1][0]=='-' and argvLength == 3:
 		print "Target file"
@@ -103,10 +108,8 @@ def setargument(option):
 	# use enum or dict instead, plz
 	showHiddenItem, nameOnly, sortByTime, sortByDescOrder, humanRead, reverseOrder= 'y', 'y', 'n', 'n', 'n', 'n'
 	# initValue = showHiddenItem + deli + nameOnly + deli + sortByTime + deli	+ sortByDescOrder + deli + humanRead + deli	+ reverseOrder
-	# arg=Arg(initValue)
-	# print arg.humanRead
 	if "a" not in option:
-		showHiddenItem='n'
+		zshowHiddenItem='n'
 		# itemList= removeHiddenFile(itemList)
 	if "l" in option:
 		nameOnly='n'
@@ -124,7 +127,6 @@ def setargument(option):
 	return arg
 
 class Arg(object):
-
 	command="ls"
 	def __init__(self,argvlist):
 		self.showHiddenItem, self.nameOnly, self.sortByTime, self.sortByDescOrder, self.reverseOrder, self.humanRead=argvlist.split(',')
@@ -132,13 +134,42 @@ class Arg(object):
 	# print self.showHiddenItem		# Why can't I call the self.showHiddenItem value in class scope?
 	def setVar(self,argvlist):
 		showHiddenItem, nameOnly, sortByTime, sortByDescOrder, reverseOrder, humanRead=argvlist.split(',')
+# Caller: rootDir: os.path.list('.'), item[n] is the itemName, os.path.getatime(item[n])
+class itemInfo(object):
+	"""docstring for itemInfo"""
+	def __init__(self,rootDir=None, itemName=None, ctime=None):
+		super(itemInfo, self).__init__()
+		self.rootDir= rootDir
+		self.itemName= itemName
+		self.ctime= ctime
 
+	# __cmp__
+
+		
 def removeHiddenFile(list):
 	newList=[]
 	newList[:]= [x for x in list if not x.startswith('.')]
 	return newList
 
-ls(sys.argv)
+def removeHiddenFile_(list):
+	# while i=len(list)--:
+	# 	pass
+	return
+
+def createItems(path):
+	itemsList=[]
+	items = os.listdir(path)
+	abspath = os.path.abspath(path)
+	print "abspath is", abspath
+	for i in items:
+		item = itemInfo(abspath, i, os.path.getatime(i))		# Ticket 2
+		itemsList.append(item)
+		print "item is: ", item.rootDir, item.itemName, item.ctime
+	return itemsList
+
+
+# ls(sys.argv)
+createItems(sys.argv[1])
 
 
 

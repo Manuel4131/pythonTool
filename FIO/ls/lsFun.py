@@ -40,9 +40,11 @@ def getDirSize(targetPath):
 			totalSize += os.path.getsize(os.path.join(rootDir,file))
 	return totalSize
 
-def printFile(targetPath,file):
-	print (('%s') % (getPermission(targetPath,0) + '\t')), (('%s') % (file +'\t')), ( ('%s') % ( translateUnit(os.path.getsize(targetPath))) + '\t' ), ( ('%s') % ( time.ctime(os.path.getatime(targetPath))) + '\t' )
+# def printFile(targetPath,file):
+# 	print (('%s') % (getPermission(targetPath,0) + '\t')), (('%s') % (file +'\t')), ( ('%s') % ( translateUnit(os.path.getsize(targetPath))) + '\t' ), ( ('%s') % ( time.ctime(os.path.getatime(targetPath))) + '\t' )
 	# print "{:>10} {:>10} {:>8} {:>20}".format(getPermission(targetPath,0), file, translateUnit(os.path.getsize(targetPath)), time.ctime(os.path.getatime(targetPath)))
+def printFile_(item):
+	print (('%s') % (getPermission(item.targetPath,0) + '\t')), (('%s') % (item.itemName +'\t')), ( ('%s') % ( translateUnit(os.path.getsize(item.targetPath))) + '\t' ), ( ('%s') % ( time.ctime(os.path.getatime(item.targetPath))) + '\t' )
 
 def printDir(targetPath,dir):
 	print "{:>10} {:>10} {:>8} {:>20}".format(getPermission(targetPath,1), dir + '/', translateUnit(getDirSize(targetPath)), time.ctime(os.path.getatime(targetPath)))	
@@ -64,28 +66,33 @@ def createAbspath(list):
 	i = 0
 	while i < len(list):
 		absPath.append( os.path.abspath(list[i]))
-		# print os.path.abspath(list[i])	
 		i+=1
 	return absPath
 
 def printFormat(args, path):
-	items = os.listdir(path)
-	# create item objects
-
-	if args.showHiddenItem == 'n':
-		items = removeHiddenFile(items)
-
-	if args.nameOnly == 'y':
-		for item in items:
-			print (('%s') % (item + '\t'))
+	items =createItems(path)
 	
+	if args.showHiddenItem == 'n':			# without 'a'
+		items = removeHiddenFile_(items)
+
+	if args.nameOnly == 'y':				# without 'l'
+		for item in items:
+			print (('%s') % (item.itemName + '\t'))
 	elif args.nameOnly == 'n':
-		abspath = createAbspath(items)
-		for i in range(0, len(items)):
-			if os.path.isfile(abspath[i]):
-				printFile(abspath[i],items[i])
-			elif os.path.isdir(abspath[i]):
-				printDir(abspath[i],items[i])
+	 	for item in items:
+	 		# print "item.targetPath", item.targetPath
+	 		if os.path.isfile(item.targetPath):
+				printFile_(item)
+# Please continue to finish the directory part. By the way, please add file/direcotry attribute to the class
+# To verfiy the item is file or direcotry in loop by calling the api several times is very inefficient
+	
+	# elif args.nameOnly == 'n':
+	# 	abspath = createAbspath(items)
+	# 	for i in range(0, len(items)):
+	# 		if os.path.isfile(abspath[i]):
+	# 			printFile(abspath[i],items[i])
+	# 		elif os.path.isdir(abspath[i]):
+	# 			printDir(abspath[i],items[i])
 
 
 def ls(argv):
@@ -93,7 +100,6 @@ def ls(argv):
 # input format check and pass to corresponding function.
 	if argv[1][0]=='-' and argvLength == 2:
 		print "no target file"
-
 		printFormat(setargument(argv[1]),'.')
 
 	elif argv[1][0]=='-' and argvLength == 3:
@@ -109,8 +115,7 @@ def setargument(option):
 	showHiddenItem, nameOnly, sortByTime, sortByDescOrder, humanRead, reverseOrder= 'y', 'y', 'n', 'n', 'n', 'n'
 	# initValue = showHiddenItem + deli + nameOnly + deli + sortByTime + deli	+ sortByDescOrder + deli + humanRead + deli	+ reverseOrder
 	if "a" not in option:
-		zshowHiddenItem='n'
-		# itemList= removeHiddenFile(itemList)
+		showHiddenItem='n'
 	if "l" in option:
 		nameOnly='n'
 		if "t" in option:
@@ -134,7 +139,8 @@ class Arg(object):
 	# print self.showHiddenItem		# Why can't I call the self.showHiddenItem value in class scope?
 	def setVar(self,argvlist):
 		showHiddenItem, nameOnly, sortByTime, sortByDescOrder, reverseOrder, humanRead=argvlist.split(',')
-# Caller: rootDir: os.path.list('.'), item[n] is the itemName, os.path.getatime(item[n])
+
+
 class itemInfo(object):
 	"""docstring for itemInfo"""
 	def __init__(self,rootDir=None, itemName=None, ctime=None):
@@ -142,34 +148,33 @@ class itemInfo(object):
 		self.rootDir= rootDir
 		self.itemName= itemName
 		self.ctime= ctime
+		self.targetPath= os.path.join(self.rootDir, self.itemName)
 
 	# __cmp__
 
 		
-def removeHiddenFile(list):
-	newList=[]
-	newList[:]= [x for x in list if not x.startswith('.')]
-	return newList
+# def removeHiddenFile(list):
+# 	newList=[]
+# 	newList[:]= [x for x in list if not x.startswith('.')]
+# 	return newList
 
 def removeHiddenFile_(list):
-	# while i=len(list)--:
-	# 	pass
-	return
+	newItemList=[]
+	newItemList= [x for x in list if not x.itemName.startswith('.')]
+	return newItemList
 
 def createItems(path):
 	itemsList=[]
 	items = os.listdir(path)
-	abspath = os.path.abspath(path)
-	print "abspath is", abspath
+	abspath = os.path.abspath(path)	
 	for i in items:
 		item = itemInfo(abspath, i, os.path.getatime(i))		# Ticket 2
-		itemsList.append(item)
-		print "item is: ", item.rootDir, item.itemName, item.ctime
+		itemsList.append(item)	
 	return itemsList
 
 
-# ls(sys.argv)
-createItems(sys.argv[1])
+ls(sys.argv)
+
 
 
 

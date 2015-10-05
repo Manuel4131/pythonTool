@@ -46,8 +46,11 @@ def getDirSize(targetPath):
 def printFile_(item):
 	print (('%s') % (getPermission(item.targetPath,0) + '\t')), (('%s') % (item.itemName +'\t')), ( ('%s') % ( translateUnit(os.path.getsize(item.targetPath))) + '\t' ), ( ('%s') % ( time.ctime(os.path.getatime(item.targetPath))) + '\t' )
 
-def printDir(targetPath,dir):
-	print "{:>10} {:>10} {:>8} {:>20}".format(getPermission(targetPath,1), dir + '/', translateUnit(getDirSize(targetPath)), time.ctime(os.path.getatime(targetPath)))	
+ def printDir(targetPath,dir):
+ 	print "{:>10} {:>10} {:>8} {:>20}".format(getPermission(targetPath,1), dir + '/', translateUnit(getDirSize(targetPath)), time.ctime(os.path.getatime(targetPath)))	
+
+# def printDir_(targetPath,dir):
+# 	print "{:>10} {:>10} {:>8} {:>20}".format(getPermission(targetPath,1), dir + '/', translateUnit(getDirSize(targetPath)), time.ctime(os.path.getatime(targetPath)))	
 	
 # def ls(targetPath):
 	# if os.path.isfile(targetPath):
@@ -81,8 +84,10 @@ def printFormat(args, path):
 	elif args.nameOnly == 'n':
 	 	for item in items:
 	 		# print "item.targetPath", item.targetPath
-	 		if os.path.isfile(item.targetPath):
-				printFile_(item)
+	 		# if os.path.isfile(item.targetPath):
+	 		if item.filetype == 1:				# type{0,1,2}, {dir, file, others}
+				printFile_(item)	 		
+			# elif item.filetype == 0:
 # Please continue to finish the directory part. By the way, please add file/direcotry attribute to the class
 # To verfiy the item is file or direcotry in loop by calling the api several times is very inefficient
 	
@@ -149,6 +154,13 @@ class itemInfo(object):
 		self.itemName= itemName
 		self.ctime= ctime
 		self.targetPath= os.path.join(self.rootDir, self.itemName)
+		if(os.path.isfile(self.targetPath)):
+			self.filetype = 1
+		elif(os.path.isdir(self.targetPath)):
+			self.filetype = 0
+		else:
+			self.filetype = 2
+
 
 	# __cmp__
 

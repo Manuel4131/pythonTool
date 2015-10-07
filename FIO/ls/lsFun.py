@@ -23,7 +23,7 @@ def getPermission(file, type):
 def translateUnit(bits):
 	bits=float(bits)
 	d=0
-	units=('B','K','M','G','T')
+	units=('B','K','M','G','T','P')
 	while bits >= 1024:			
 		bits/=k
 		d=d+1
@@ -46,8 +46,11 @@ def getDirSize(targetPath):
 def printFile_(item):
 	print (('%s') % (getPermission(item.targetPath,0) + '\t')), (('%s') % (item.itemName +'\t')), ( ('%s') % ( translateUnit(os.path.getsize(item.targetPath))) + '\t' ), ( ('%s') % ( time.ctime(os.path.getatime(item.targetPath))) + '\t' )
 
- def printDir(targetPath,dir):
- 	print "{:>10} {:>10} {:>8} {:>20}".format(getPermission(targetPath,1), dir + '/', translateUnit(getDirSize(targetPath)), time.ctime(os.path.getatime(targetPath)))	
+# def printDir(targetPath,dir):
+#  	print "{:>10} {:>10} {:>8} {:>20}".format(getPermission(targetPath,1), dir + '/', translateUnit(getDirSize(targetPath)), time.ctime(os.path.getatime(targetPath)))	
+
+def printDir_(item):
+ 	print "{:>10} {:>10} {:>8} {:>20}".format(getPermission(item.targetPath,1), item.itemName + '/', translateUnit(getDirSize(item.targetPath)), time.ctime(os.path.getatime(item.targetPath)))	
 
 # def printDir_(targetPath,dir):
 # 	print "{:>10} {:>10} {:>8} {:>20}".format(getPermission(targetPath,1), dir + '/', translateUnit(getDirSize(targetPath)), time.ctime(os.path.getatime(targetPath)))	
@@ -86,8 +89,9 @@ def printFormat(args, path):
 	 		# print "item.targetPath", item.targetPath
 	 		# if os.path.isfile(item.targetPath):
 	 		if item.filetype == 1:				# type{0,1,2}, {dir, file, others}
-				printFile_(item)	 		
-			# elif item.filetype == 0:
+				printFile_(item)
+			elif item.filetype == 0:
+				printDir_(item)
 # Please continue to finish the directory part. By the way, please add file/direcotry attribute to the class
 # To verfiy the item is file or direcotry in loop by calling the api several times is very inefficient
 	

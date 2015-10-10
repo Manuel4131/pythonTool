@@ -43,6 +43,8 @@ def getDirSize(targetPath):
 # def printFile(targetPath,file):
 # 	print (('%s') % (getPermission(targetPath,0) + '\t')), (('%s') % (file +'\t')), ( ('%s') % ( translateUnit(os.path.getsize(targetPath))) + '\t' ), ( ('%s') % ( time.ctime(os.path.getatime(targetPath))) + '\t' )
 	# print "{:>10} {:>10} {:>8} {:>20}".format(getPermission(targetPath,0), file, translateUnit(os.path.getsize(targetPath)), time.ctime(os.path.getatime(targetPath)))
+
+# Change the api to have another argument: fileSize which is decieded by the attribute 'h'	
 def printFile_(item):
 	print (('%s') % (getPermission(item.targetPath,0) + '\t')), (('%s') % (item.itemName +'\t')), ( ('%s') % ( translateUnit(os.path.getsize(item.targetPath))) + '\t' ), ( ('%s') % ( time.ctime(os.path.getatime(item.targetPath))) + '\t' )
 
@@ -77,24 +79,34 @@ def createAbspath(list):
 
 def printFormat(args, path):
 	items =createItems(path)
-	
+
+# Set the list element according the argument attribute	
 	if args.showHiddenItem == 'n':			# without 'a'
 		items = removeHiddenFile_(items)
 
 	if args.nameOnly == 'y':				# without 'l'
 		for item in items:
 			print (('%s') % (item.itemName + '\t'))
-	elif args.nameOnly == 'n':
-	 	for item in items:
-	 		# print "item.targetPath", item.targetPath
-	 		# if os.path.isfile(item.targetPath):
-	 		if item.filetype == 1:				# type{0,1,2}, {dir, file, others}
-				printFile_(item)
-			elif item.filetype == 0:
-				printDir_(item)
-# Please continue to finish the directory part. By the way, please add file/direcotry attribute to the class
-# To verfiy the item is file or direcotry in loop by calling the api several times is very inefficient
-	
+	elif args.nameOnly == 'n':				# with 'l'
+	 	# Check the attributes which depend on 'l': 't','r'
+	 	sortByTime = 'n'
+	 	reverseOrder = 'n'
+
+	 	if args.sortByTime == 'y':
+	 		sortByTime = 'y'
+	 	if args.reverseOrder == 'y':
+	 		reverseOrder = 'y'
+#set done
+#final print
+ 	for item in items:
+ 		if item.filetype == 1:				# type{0,1,2}, {dir, file, others}
+			printFile_(item)
+		elif item.filetype == 0:
+			printDir_(item)
+
+					
+
+
 	# elif args.nameOnly == 'n':
 	# 	abspath = createAbspath(items)
 	# 	for i in range(0, len(items)):

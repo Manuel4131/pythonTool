@@ -4,7 +4,7 @@
 #import sys;
 #import glob;
 
-import os, sys, time, inspect;
+import os, sys, time, inspect, operator;
 
 k=float(1024)
 def getPermission(file, type):
@@ -52,7 +52,7 @@ def printFile_(item):
 #  	print "{:>10} {:>10} {:>8} {:>20}".format(getPermission(targetPath,1), dir + '/', translateUnit(getDirSize(targetPath)), time.ctime(os.path.getatime(targetPath)))	
 
 def printDir_(item):
- 	print "{:>10} {:>10} {:>8} {:>20}".format(getPermission(item.targetPath,1), item.itemName + '/', translateUnit(getDirSize(item.targetPath)), time.ctime(os.path.getatime(item.targetPath)))	
+ 	print "{:>10} {:>10} {:>8} {:>20}".format(getPermission(item.targetPath,1), item.itemName + '/', translateUnit(getDirSize(item.targetPath)), time.ctime(os.path.getmtime(item.targetPath)))	
 
 # def printDir_(targetPath,dir):
 # 	print "{:>10} {:>10} {:>8} {:>20}".format(getPermission(targetPath,1), dir + '/', translateUnit(getDirSize(targetPath)), time.ctime(os.path.getatime(targetPath)))	
@@ -88,12 +88,13 @@ def printFormat(args, path):
 		for item in items:
 			print (('%s') % (item.itemName + '\t'))
 	elif args.nameOnly == 'n':				# with 'l'
-	 	# Check the attributes which depend on 'l': 't','r'
+	 	# Check the attributes which depend on the attribute 'l': 't','r'
 	 	sortByTime = 'n'
 	 	reverseOrder = 'n'
 
 	 	if args.sortByTime == 'y':
 	 		sortByTime = 'y'
+	 		items.sort(key=operator.attrgetter("ctime"),reverse= True)
 	 	if args.reverseOrder == 'y':
 	 		reverseOrder = 'y'
 #set done
@@ -196,7 +197,7 @@ def createItems(path):
 	items = os.listdir(path)
 	abspath = os.path.abspath(path)	
 	for i in items:
-		item = itemInfo(abspath, i, os.path.getatime(i))		# Ticket 2
+		item = itemInfo(abspath, i, os.path.getmtime(i))		# Ticket 2
 		itemsList.append(item)	
 	return itemsList
 

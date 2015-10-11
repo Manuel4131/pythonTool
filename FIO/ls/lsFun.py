@@ -40,34 +40,17 @@ def getDirSize(targetPath):
 			totalSize += os.path.getsize(os.path.join(rootDir,file))
 	return totalSize
 
-# def printFile(targetPath,file):
-# 	print (('%s') % (getPermission(targetPath,0) + '\t')), (('%s') % (file +'\t')), ( ('%s') % ( translateUnit(os.path.getsize(targetPath))) + '\t' ), ( ('%s') % ( time.ctime(os.path.getatime(targetPath))) + '\t' )
-	# print "{:>10} {:>10} {:>8} {:>20}".format(getPermission(targetPath,0), file, translateUnit(os.path.getsize(targetPath)), time.ctime(os.path.getatime(targetPath)))
-
 # Change the api to have another argument: fileSize which is decieded by the attribute 'h'	
 def printFile_(item):
-	print (('%s') % (getPermission(item.targetPath,0) + '\t')), (('%s') % (item.itemName +'\t')), ( ('%s') % ( translateUnit(os.path.getsize(item.targetPath))) + '\t' ), ( ('%s') % ( time.ctime(os.path.getatime(item.targetPath))) + '\t' )
-
-# def printDir(targetPath,dir):
-#  	print "{:>10} {:>10} {:>8} {:>20}".format(getPermission(targetPath,1), dir + '/', translateUnit(getDirSize(targetPath)), time.ctime(os.path.getatime(targetPath)))	
+	print (('%s') % (getPermission(item.targetPath,0) + '\t')), (('%s') % (item.itemName +'\t')), ( ('%s') % ( translateUnit(os.path.getsize(item.targetPath))) + '\t' ), ( ('%s') % ( time.ctime( item.mtime ) + '\t' ) )
 
 def printDir_(item):
- 	print "{:>10} {:>10} {:>8} {:>20}".format(getPermission(item.targetPath,1), item.itemName + '/', translateUnit(getDirSize(item.targetPath)), time.ctime(os.path.getmtime(item.targetPath)))	
-
-# def printDir_(targetPath,dir):
-# 	print "{:>10} {:>10} {:>8} {:>20}".format(getPermission(targetPath,1), dir + '/', translateUnit(getDirSize(targetPath)), time.ctime(os.path.getatime(targetPath)))	
-	
-# def ls(targetPath):
-	# if os.path.isfile(targetPath):
-	# 	printFile(targetPath)
-	# elif os.path.isdir(targetPath):
-	# 		printDir(item)
+ 	print "{:>10} {:>10} {:>8} {:>20}".format(getPermission(item.targetPath,1), item.itemName + '/', translateUnit(getDirSize(item.targetPath)), time.ctime( item.mtime ))	
 
 # targetPath=sys.argv[1]
 # ls(targetPath
 # val=sys.argv[1]
 # translateUnit(val)
-
 
 def createAbspath(list):
 	absPath = []
@@ -94,7 +77,7 @@ def printFormat(args, path):
 
 	 	if args.sortByTime == 'y':
 	 		sortByTime = 'y'
-	 		items.sort(key=operator.attrgetter("ctime"),reverse= True)
+	 		items.sort(key=operator.attrgetter("mtime"),reverse= True)
 	 	if args.reverseOrder == 'y':
 	 		reverseOrder = 'y'
 #set done
@@ -104,9 +87,6 @@ def printFormat(args, path):
 			printFile_(item)
 		elif item.filetype == 0:
 			printDir_(item)
-
-					
-
 
 	# elif args.nameOnly == 'n':
 	# 	abspath = createAbspath(items)
@@ -133,7 +113,7 @@ def ls(argv):
 def setargument(option):
 	# itemList= os.listdir(target)	# Change itemList to object list
 	deli=','
-	# use enum or dict instead, plz
+# use enum or dict instead, plz
 	showHiddenItem, nameOnly, sortByTime, sortByDescOrder, humanRead, reverseOrder= 'y', 'y', 'n', 'n', 'n', 'n'
 	# initValue = showHiddenItem + deli + nameOnly + deli + sortByTime + deli	+ sortByDescOrder + deli + humanRead + deli	+ reverseOrder
 	if "a" not in option:
@@ -156,8 +136,7 @@ def setargument(option):
 class Arg(object):
 	command="ls"
 	def __init__(self,argvlist):
-		self.showHiddenItem, self.nameOnly, self.sortByTime, self.sortByDescOrder, self.reverseOrder, self.humanRead=argvlist.split(',')
-	
+		self.showHiddenItem, self.nameOnly, self.sortByTime, self.sortByDescOrder, self.reverseOrder, self.humanRead=argvlist.split(',')	
 	# print self.showHiddenItem		# Why can't I call the self.showHiddenItem value in class scope?
 	def setVar(self,argvlist):
 		showHiddenItem, nameOnly, sortByTime, sortByDescOrder, reverseOrder, humanRead=argvlist.split(',')
@@ -165,11 +144,11 @@ class Arg(object):
 
 class itemInfo(object):
 	"""docstring for itemInfo"""
-	def __init__(self,rootDir=None, itemName=None, ctime=None):
+	def __init__(self,rootDir=None, itemName=None, mtime=None):
 		super(itemInfo, self).__init__()
 		self.rootDir= rootDir
 		self.itemName= itemName
-		self.ctime= ctime
+		self.mtime= mtime
 		self.targetPath= os.path.join(self.rootDir, self.itemName)
 		if(os.path.isfile(self.targetPath)):
 			self.filetype = 1
@@ -180,12 +159,6 @@ class itemInfo(object):
 
 
 	# __cmp__
-
-		
-# def removeHiddenFile(list):
-# 	newList=[]
-# 	newList[:]= [x for x in list if not x.startswith('.')]
-# 	return newList
 
 def removeHiddenFile_(list):
 	newItemList=[]

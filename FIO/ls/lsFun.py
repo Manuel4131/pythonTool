@@ -5,6 +5,8 @@
 #import glob;
 
 import os, sys, time, inspect, operator;
+from datetime import datetime;
+startime= datetime.now()
 
 k=float(1024)
 def getPermission(file, type):
@@ -71,23 +73,22 @@ def printFormat(args, path):
 		for item in items:
 			print (('%s') % (item.itemName + '\t'))
 	elif args.nameOnly == 'n':				# with 'l'
-	 	# Check the attributes which depend on the attribute 'l': 't','r'
-	 	sortByTime = 'n'
-	 	reverseOrder = 'n'
+		# Set time attribute:
+		for i in items:
+		 	i.setmtime()	
 
-	 	if args.sortByTime == 'y':
-	 		sortByTime = 'y'
-	 		items.sort(key=operator.attrgetter("mtime"),reverse= True)
-	 	if args.reverseOrder == 'y':
-	 		reverseOrder = 'y'
-#set done
+	 	if args.sortByTime == 'y':			# with 't'
+	 		if args.reverseOrder == 'y':	# with 'r' or not
+	 			items.sort(key=operator.attrgetter("mtime"),reverse= True)
+	 		else:
+	 			items.sort(key=operator.attrgetter("mtime"),reverse= False)
+
 #final print
  	for item in items:
  		if item.filetype == 1:				# type{0,1,2}, {dir, file, others}
 			printFile_(item)
 		elif item.filetype == 0:
 			printDir_(item)
-
 	# elif args.nameOnly == 'n':
 	# 	abspath = createAbspath(items)
 	# 	for i in range(0, len(items)):
@@ -156,6 +157,8 @@ class itemInfo(object):
 			self.filetype = 0
 		else:
 			self.filetype = 2
+	def setmtime(self):
+		self.mtime= os.path.getmtime(self.targetPath)
 
 
 	# __cmp__
@@ -170,12 +173,13 @@ def createItems(path):
 	items = os.listdir(path)
 	abspath = os.path.abspath(path)	
 	for i in items:
-		item = itemInfo(abspath, i, os.path.getmtime(i))		# Ticket 2
+		item = itemInfo(abspath, i)		# Ticket 2
 		itemsList.append(item)	
 	return itemsList
 
 
 ls(sys.argv)
+print "Passed time:	", datetime.now() -startime
 
 
 

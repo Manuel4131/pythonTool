@@ -71,7 +71,7 @@ def printFormat(args, path):
 
 	if args.nameOnly == 'y':				# without 'l'
 		for item in items:
-			print (('%s') % (item.itemName + '\t'))
+			print (('%s') % (item.itemName + '\t')),	
 	elif args.nameOnly == 'n':				# with 'l'
 		# Set time attribute:
 		for i in items:
@@ -83,12 +83,11 @@ def printFormat(args, path):
 	 		else:
 	 			items.sort(key=operator.attrgetter("mtime"),reverse= False)
 
-#final print
- 	for item in items:
- 		if item.filetype == 1:				# type{0,1,2}, {dir, file, others}
-			printFile_(item)
-		elif item.filetype == 0:
-			printDir_(item)
+	 	for item in items:
+	 		if item.filetype == 1:				# type{0,1,2}, {dir, file, others}
+				printFile_(item)
+			elif item.filetype == 0:
+				printDir_(item)
 	# elif args.nameOnly == 'n':
 	# 	abspath = createAbspath(items)
 	# 	for i in range(0, len(items)):

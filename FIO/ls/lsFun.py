@@ -3,12 +3,14 @@
 #import os;
 #import sys;
 #import glob;
+from __future__ import print_function
 
-import os, sys, time, inspect, operator;
+import os, sys, time, inspect, operator; # ; against P8
 from datetime import datetime;
-startime= datetime.now()
 
-k=float(1024)
+# Use shell script 'time' instead!.  Built-in module called 
+
+K=1024.
 def getPermission(file, type):
 	perSt=""
 	if type:
@@ -22,6 +24,7 @@ def getPermission(file, type):
 		perSt+=t[int(perNum[i]) -1]
 	return perSt
 
+
 def translateUnit(bits):
 	bits=float(bits)
 	d=0
@@ -32,7 +35,7 @@ def translateUnit(bits):
 
 	bits=round(bits,2)
 	return repr(bits) + units[0]
-	
+													# Function && Function 空兩行	
 	# more case: the item may contain '/''
 def getDirSize(targetPath):		
 	totalSize=0
@@ -46,13 +49,10 @@ def getDirSize(targetPath):
 def printFile_(item):
 	print (('%s') % (getPermission(item.targetPath,0) + '\t')), (('%s') % (item.itemName +'\t')), ( ('%s') % ( translateUnit(os.path.getsize(item.targetPath))) + '\t' ), ( ('%s') % ( time.ctime( item.mtime ) + '\t' ) )
 
+
 def printDir_(item):
  	print "{:>10} {:>10} {:>8} {:>20}".format(getPermission(item.targetPath,1), item.itemName + '/', translateUnit(getDirSize(item.targetPath)), time.ctime( item.mtime ))	
 
-# targetPath=sys.argv[1]
-# ls(targetPath
-# val=sys.argv[1]
-# translateUnit(val)
 
 def createAbspath(list):
 	absPath = []
@@ -62,9 +62,9 @@ def createAbspath(list):
 		i+=1
 	return absPath
 
+
 def printFormat(args, path):
 	items =createItems(path)
-
 # Set the list element according the argument attribute	
 	if args.showHiddenItem == 'n':			# without 'a'
 		items = removeHiddenFile_(items)
@@ -109,27 +109,37 @@ def ls(argv):
 	else:
 		print "list file names only"
 
+
 # Print main function
 def setargument(option):
 	# itemList= os.listdir(target)	# Change itemList to object list
 	deli=','
 # use enum or dict instead, plz
-	showHiddenItem, nameOnly, sortByTime, sortByDescOrder, humanRead, reverseOrder= 'y', 'y', 'n', 'n', 'n', 'n'
+	showHiddenItem, nameOnly, sortByTime, sortByDescOrder, humanRead, reverseOrder= True, True, False, False, False, False # True, False Why not?
+	# line by line
 	# initValue = showHiddenItem + deli + nameOnly + deli + sortByTime + deli	+ sortByDescOrder + deli + humanRead + deli	+ reverseOrder
 	if "a" not in option:
-		showHiddenItem='n'
+		showHiddenItem=False
 	if "l" in option:
-		nameOnly='n'
+		nameOnly=False
 		if "t" in option:
-			sortByTime='y'
-			sortByDescOrder='y'
+			sortByTime=True
+			sortByDescOrder=True
 		if "h" in option:
-			humanRead='y'
-			
+			humanRead=True			
 		if "r" in option:
-			reverseOrder='y'
-	
-	resultValue = showHiddenItem + deli + nameOnly + deli + sortByTime + deli + sortByDescOrder  + deli	+ reverseOrder + deli + humanRead
+			reverseOrder=True
+	# Use dictionary instead.
+	# #opts={}
+	# opts['reverse_Order'] = 'y' if 'r' in option else 'n'
+	# opts['reverse_Order2'] = 'y' if 'r' in option else 'n'
+	# arg = Args(**opts)
+	# class Args(object):
+
+	# 	def __init__(self, reverse_Order, reverse_Order2):
+	# 		pass
+
+ 	resultValue = showHiddenItem + deli + nameOnly + deli + sortByTime + deli + sortByDescOrder  + deli	+ reverseOrder + deli + humanRead # string 
 	arg=Arg(resultValue)
 	return arg
 
@@ -142,7 +152,7 @@ class Arg(object):
 		showHiddenItem, nameOnly, sortByTime, sortByDescOrder, reverseOrder, humanRead=argvlist.split(',')
 
 
-class itemInfo(object):
+class ItemInfo(object):			# First char in class name should be uppercase.
 	"""docstring for itemInfo"""
 	def __init__(self,rootDir=None, itemName=None, mtime=None):
 		super(itemInfo, self).__init__()
@@ -160,12 +170,11 @@ class itemInfo(object):
 		self.mtime= os.path.getmtime(self.targetPath)
 
 
-	# __cmp__
-
-def removeHiddenFile_(list):
+def removeHiddenFile_(list): # list is a default class name, ID/			highlight_
 	newItemList=[]
 	newItemList= [x for x in list if not x.itemName.startswith('.')]
 	return newItemList
+
 
 def createItems(path):
 	itemsList=[]
@@ -173,9 +182,9 @@ def createItems(path):
 	abspath = os.path.abspath(path)	
 	for i in items:
 		item = itemInfo(abspath, i)		# Ticket 2
-		itemsList.append(item)	
+		itemsList.append(item)					# list 
 	return itemsList
 
 
 ls(sys.argv)
-print "Passed time:	", datetime.now() -startime
+# print "Passed time:	", datetime.now() -startime

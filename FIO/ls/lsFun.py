@@ -3,7 +3,7 @@
 #import os;
 #import sys;
 #import glob;
-from __future__ import print_function
+# from __future__ import print_function
 
 import os, sys, time, inspect, operator; # ; against P8
 from datetime import datetime;
@@ -35,8 +35,9 @@ def translateUnit(bits):
 
 	bits=round(bits,2)
 	return repr(bits) + units[0]
-													# Function && Function 空兩行	
+		# Function && Function 
 	# more case: the item may contain '/''
+	
 def getDirSize(targetPath):		
 	totalSize=0
 	# print "targetPath", targetPath
@@ -51,7 +52,7 @@ def printFile_(item):
 
 
 def printDir_(item):
- 	print "{:>10} {:>10} {:>8} {:>20}".format(getPermission(item.targetPath,1), item.itemName + '/', translateUnit(getDirSize(item.targetPath)), time.ctime( item.mtime ))	
+ 	print "{:>10} {:>10} {:>8} {:>20}".format(getPermission(item.targetPath,1), item.itemName + '/', translateUnit(getDirSize(item.targetPath)), time.ctime( item.mtime ))
 
 
 def createAbspath(list):
@@ -66,19 +67,20 @@ def createAbspath(list):
 def printFormat(args, path):
 	items =createItems(path)
 # Set the list element according the argument attribute	
-	if args.showHiddenItem == 'n':			# without 'a'
+	if args.showHiddenItem:			# without 'a'
 		items = removeHiddenFile_(items)
 
-	if args.nameOnly == 'y':				# without 'l'
+	if args.nameOnly:				# without 'l'
 		for item in items:
 			print (('%s') % (item.itemName + '\t')),	
-	elif args.nameOnly == 'n':				# with 'l'
+	elif args.nameOnly:				# with 'l'
 		# Set time attribute:
+		print 'l'
 		for i in items:
 		 	i.setmtime()	
 
-	 	if args.sortByTime == 'y':			# with 't'
-	 		if args.reverseOrder == 'y':	# with 'r' or not
+	 	if args.sortByTime:			# with 't'
+	 		if args.reverseOrder:	# with 'r' or not
 	 			items.sort(key=operator.attrgetter("mtime"),reverse= True)
 	 		else:
 	 			items.sort(key=operator.attrgetter("mtime"),reverse= False)
@@ -86,6 +88,7 @@ def printFormat(args, path):
 	 	for item in items:
 	 		if item.filetype == 1:				# type{0,1,2}, {dir, file, others}
 				printFile_(item)
+				print 1
 			elif item.filetype == 0:
 				printDir_(item)
 	# elif args.nameOnly == 'n':
@@ -138,24 +141,39 @@ def setargument(option):
 
 	# 	def __init__(self, reverse_Order, reverse_Order2):
 	# 		pass
+	dic={}
+	dic["showHiddenItem"] = showHiddenItem
+	dic["nameOnly"] = nameOnly
+	dic["sortByTime"] = sortByTime
+	dic["sortByDescOrder"] = sortByDescOrder
+	dic["reverseOrder"] = reverseOrder
+	dic["humanRead"] = humanRead
 
- 	resultValue = showHiddenItem + deli + nameOnly + deli + sortByTime + deli + sortByDescOrder  + deli	+ reverseOrder + deli + humanRead # string 
-	arg=Arg(resultValue)
+ 	# resultValue = showHiddenItem + deli + nameOnly + deli + sortByTime + deli + sortByDescOrder  + deli	+ reverseOrder + deli + humanRead # string 
+	arg=Arg(**dic)
 	return arg
 
+
 class Arg(object):
-	command="ls"
-	def __init__(self,argvlist):
-		self.showHiddenItem, self.nameOnly, self.sortByTime, self.sortByDescOrder, self.reverseOrder, self.humanRead=argvlist.split(',')	
+	
+	def __init__(self,showHiddenItem=False, nameOnly=False, sortByTime=False, sortByDescOrder=False, reverseOrder=False, humanRead=False):
+		self.showHiddenItem= showHiddenItem
+		self.nameOnly = nameOnly
+		self.sortByTime = sortByTime
+		self.sortByDescOrder = sortByDescOrder
+		self.reverseOrder = reverseOrder
+		self.humanRead = humanRead
+		
+		# self.showHiddenItem, self.nameOnly, self.sortByTime, self.sortByDescOrder, self.reverseOrder, self.humanRead=argvlist.split(',')	
 	# print self.showHiddenItem		# Why can't I call the self.showHiddenItem value in class scope?
 	def setVar(self,argvlist):
 		showHiddenItem, nameOnly, sortByTime, sortByDescOrder, reverseOrder, humanRead=argvlist.split(',')
 
 
 class ItemInfo(object):			# First char in class name should be uppercase.
-	"""docstring for itemInfo"""
+	"""docstring for ItemInfo"""
 	def __init__(self,rootDir=None, itemName=None, mtime=None):
-		super(itemInfo, self).__init__()
+		super(ItemInfo, self).__init__()
 		self.rootDir= rootDir
 		self.itemName= itemName
 		self.mtime= mtime
@@ -181,7 +199,7 @@ def createItems(path):
 	items = os.listdir(path)
 	abspath = os.path.abspath(path)	
 	for i in items:
-		item = itemInfo(abspath, i)		# Ticket 2
+		item = ItemInfo(abspath, i)		# Ticket 2
 		itemsList.append(item)					# list 
 	return itemsList
 

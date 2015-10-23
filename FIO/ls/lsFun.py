@@ -30,7 +30,7 @@ def translateUnit(bits):
 	d=0
 	units=('B','K','M','G','T','P')
 	while bits >= 1024:			
-		bits/=k
+		bits/=K
 		d=d+1
 
 	bits=round(bits,2)
@@ -47,11 +47,11 @@ def getDirSize(targetPath):
 	return totalSize
 
 # Change the api to have another argument: fileSize which is decieded by the attribute 'h'	
-def printFile_(item):
+def printFile(item):
 	print (('%s') % (getPermission(item.targetPath,0) + '\t')), (('%s') % (item.itemName +'\t')), ( ('%s') % ( translateUnit(os.path.getsize(item.targetPath))) + '\t' ), ( ('%s') % ( time.ctime( item.mtime ) + '\t' ) )
 
 
-def printDir_(item):
+def printDir(item):
  	print "{:>10} {:>10} {:>8} {:>20}".format(getPermission(item.targetPath,1), item.itemName + '/', translateUnit(getDirSize(item.targetPath)), time.ctime( item.mtime ))
 
 
@@ -73,10 +73,8 @@ def printFormat(args, path):
 	if args.nameOnly:				# without 'l'
 		for item in items:
 			print (('%s') % (item.itemName + '\t')),	
-	elif args.nameOnly:				# with 'l'
-		# Set time attribute:
-		print 'l'
-		for i in items:
+	elif not args.nameOnly:				# with 'l'		
+		for i in items:					# Set time attribute:
 		 	i.setmtime()	
 
 	 	if args.sortByTime:			# with 't'
@@ -87,10 +85,9 @@ def printFormat(args, path):
 
 	 	for item in items:
 	 		if item.filetype == 1:				# type{0,1,2}, {dir, file, others}
-				printFile_(item)
-				print 1
+				printFile(item)
 			elif item.filetype == 0:
-				printDir_(item)
+				printDir(item)
 	# elif args.nameOnly == 'n':
 	# 	abspath = createAbspath(items)
 	# 	for i in range(0, len(items)):

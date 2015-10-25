@@ -67,8 +67,8 @@ def createAbspath(list):
 def printFormat(args, path):
 	items =createItems(path)
 # Set the list element according the argument attribute	
-	if args.showHiddenItem:			# without 'a'
-		items = removeHiddenFile_(items)
+	if not args.showHiddenItem:			# without 'a'
+		items = removeHiddenFile(items)
 
 	if args.nameOnly:				# without 'l'
 		for item in items:
@@ -79,22 +79,15 @@ def printFormat(args, path):
 
 	 	if args.sortByTime:			# with 't'
 	 		if args.reverseOrder:	# with 'r' or not
-	 			items.sort(key=operator.attrgetter("mtime"),reverse= True)
-	 		else:
 	 			items.sort(key=operator.attrgetter("mtime"),reverse= False)
+	 		else:
+	 			items.sort(key=operator.attrgetter("mtime"),reverse= True)
 
 	 	for item in items:
 	 		if item.filetype == 1:				# type{0,1,2}, {dir, file, others}
 				printFile(item)
 			elif item.filetype == 0:
 				printDir(item)
-	# elif args.nameOnly == 'n':
-	# 	abspath = createAbspath(items)
-	# 	for i in range(0, len(items)):
-	# 		if os.path.isfile(abspath[i]):
-	# 			printFile(abspath[i],items[i])
-	# 		elif os.path.isdir(abspath[i]):
-	# 			printDir(abspath[i],items[i])
 
 
 def ls(argv):
@@ -112,41 +105,24 @@ def ls(argv):
 
 # Print main function
 def setargument(option):
-	# itemList= os.listdir(target)	# Change itemList to object list
-	deli=','
-# use enum or dict instead, plz
-	showHiddenItem, nameOnly, sortByTime, sortByDescOrder, humanRead, reverseOrder= True, True, False, False, False, False # True, False Why not?
-	# line by line
-	# initValue = showHiddenItem + deli + nameOnly + deli + sortByTime + deli	+ sortByDescOrder + deli + humanRead + deli	+ reverseOrder
-	if "a" not in option:
-		showHiddenItem=False
+	
+	showHiddenItem, nameOnly, sortByTime, sortByDescOrder, humanRead, reverseOrder= False, True, False, False, False, False 
+													# True, False Why not?
+	dic={}
+	dic["showHiddenItem"]= True if 'a' in option else False
 	if "l" in option:
-		nameOnly=False
-		if "t" in option:
-			sortByTime=True
-			sortByDescOrder=True
-		if "h" in option:
-			humanRead=True			
-		if "r" in option:
-			reverseOrder=True
+		dic["nameOnly"] = False
+		# Set relative attribute values:
+		dic["sortByTime"]=True if "t" in option else False
+		dic["sortByDescOrder"]=True if "t" in option else False
+		dic["humanRead"]=True if "h" in option else False
+		dic["reverseOrder"]=True if "r" in option else False
 	# Use dictionary instead.
 	# #opts={}
 	# opts['reverse_Order'] = 'y' if 'r' in option else 'n'
 	# opts['reverse_Order2'] = 'y' if 'r' in option else 'n'
 	# arg = Args(**opts)
 	# class Args(object):
-
-	# 	def __init__(self, reverse_Order, reverse_Order2):
-	# 		pass
-	dic={}
-	dic["showHiddenItem"] = showHiddenItem
-	dic["nameOnly"] = nameOnly
-	dic["sortByTime"] = sortByTime
-	dic["sortByDescOrder"] = sortByDescOrder
-	dic["reverseOrder"] = reverseOrder
-	dic["humanRead"] = humanRead
-
- 	# resultValue = showHiddenItem + deli + nameOnly + deli + sortByTime + deli + sortByDescOrder  + deli	+ reverseOrder + deli + humanRead # string 
 	arg=Arg(**dic)
 	return arg
 
@@ -185,7 +161,7 @@ class ItemInfo(object):			# First char in class name should be uppercase.
 		self.mtime= os.path.getmtime(self.targetPath)
 
 
-def removeHiddenFile_(list): # list is a default class name, ID/			highlight_
+def removeHiddenFile(list): # list is a default class name, ID/			highlight_
 	newItemList=[]
 	newItemList= [x for x in list if not x.itemName.startswith('.')]
 	return newItemList

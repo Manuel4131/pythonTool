@@ -3,8 +3,8 @@
 #import os;
 #import sys;
 #import glob;
-# from __future__ import print_function
 
+from __future__ import print_function
 import os, sys, time, inspect, operator; # ; against P8
 from datetime import datetime;
 
@@ -16,8 +16,7 @@ def getPermission(file, type):
 	if type:
 		perSt='d'
 	else :
-		perSt='-'
-        
+		perSt='-'        
 	perNum=oct(os.stat(file).st_mode)[-3:]
 	t=('--x','-w-','-wx','r--','r-x','rw-','rwx')
 	for i in range(0,3):
@@ -32,15 +31,12 @@ def translateUnit(bits):
 	while bits >= 1024:			
 		bits/=K
 		d=d+1
-
 	bits=round(bits,2)
 	return repr(bits) + units[0]
-		# Function && Function 
 	# more case: the item may contain '/''
 	
 def getDirSize(targetPath):		
 	totalSize=0
-	# print "targetPath", targetPath
 	for rootDir, subDir, subFile in os.walk(targetPath):
 		for file in subFile:
 			totalSize += os.path.getsize(os.path.join(rootDir,file))
@@ -113,11 +109,10 @@ def ls(argv):
 # Print main function
 def setargument(option):
 	# itemList= os.listdir(target)	# Change itemList to object list
-	deli=','
 # use enum or dict instead, plz
-	showHiddenItem, nameOnly, sortByTime, sortByDescOrder, humanRead, reverseOrder= True, True, False, False, False, False # True, False Why not?
-	# line by line
-	# initValue = showHiddenItem + deli + nameOnly + deli + sortByTime + deli	+ sortByDescOrder + deli + humanRead + deli	+ reverseOrder
+	showHiddenItem, nameOnly, sortByTime, = True, True, False  
+	sortByDescOrder, humanRead, reverseOrder = False, False, False
+	
 	if "a" not in option:
 		showHiddenItem=False
 	if "l" in option:
@@ -135,9 +130,6 @@ def setargument(option):
 	# opts['reverse_Order2'] = 'y' if 'r' in option else 'n'
 	# arg = Args(**opts)
 	# class Args(object):
-
-	# 	def __init__(self, reverse_Order, reverse_Order2):
-	# 		pass
 	dic={}
 	dic["showHiddenItem"] = showHiddenItem
 	dic["nameOnly"] = nameOnly
@@ -146,7 +138,6 @@ def setargument(option):
 	dic["reverseOrder"] = reverseOrder
 	dic["humanRead"] = humanRead
 
- 	# resultValue = showHiddenItem + deli + nameOnly + deli + sortByTime + deli + sortByDescOrder  + deli	+ reverseOrder + deli + humanRead # string 
 	arg=Arg(**dic)
 	return arg
 
@@ -160,11 +151,6 @@ class Arg(object):
 		self.sortByDescOrder = sortByDescOrder
 		self.reverseOrder = reverseOrder
 		self.humanRead = humanRead
-		
-		# self.showHiddenItem, self.nameOnly, self.sortByTime, self.sortByDescOrder, self.reverseOrder, self.humanRead=argvlist.split(',')	
-	# print self.showHiddenItem		# Why can't I call the self.showHiddenItem value in class scope?
-	def setVar(self,argvlist):
-		showHiddenItem, nameOnly, sortByTime, sortByDescOrder, reverseOrder, humanRead=argvlist.split(',')
 
 
 class ItemInfo(object):			# First char in class name should be uppercase.
@@ -185,9 +171,9 @@ class ItemInfo(object):			# First char in class name should be uppercase.
 		self.mtime= os.path.getmtime(self.targetPath)
 
 
-def removeHiddenFile_(list): # list is a default class name, ID/			highlight_
+def removeHiddenFile_(fileList): # Avoid use keyword as variable name
 	newItemList=[]
-	newItemList= [x for x in list if not x.itemName.startswith('.')]
+	newItemList= [x for x in fileList if not x.itemName.startswith('.')]
 	return newItemList
 
 

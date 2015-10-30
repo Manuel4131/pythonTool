@@ -158,9 +158,9 @@ class ItemInfo(object):			# First char in class name should be uppercase.
 		self.mtime= os.path.getmtime(self.targetPath)
 
 
-def removeHiddenFile(list): # list is a default class name, ID/			highlight_
+def removeHiddenFile(argList): # list is a default class name, ID/			highlight_
 	newItemList=[]
-	newItemList= [x for x in list if not x.itemName.startswith('.')]
+	newItemList= [x for x in argList if not x.itemName.startswith('.')]
 	return newItemList
 
 

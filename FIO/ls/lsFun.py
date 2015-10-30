@@ -40,7 +40,6 @@ def translateUnit(bits):
 	
 def getDirSize(targetPath):		
 	totalSize=0
-	# print "targetPath", targetPath
 	for rootDir, subDir, subFile in os.walk(targetPath):
 		for file in subFile:
 			totalSize += os.path.getsize(os.path.join(rootDir,file))
@@ -106,15 +105,15 @@ def ls(argv):
 # Print main function
 def setargument(option):
 	
-	showHiddenItem, nameOnly, sortByTime, sortByDescOrder, humanRead, reverseOrder= False, True, False, False, False, False 
-													# True, False Why not?
+	showHiddenItem, nameOnly, sortByTime =  False, True, False
+	humanRead, reverseOrder=  False, False 
+													
 	dic={}
 	dic["showHiddenItem"]= True if 'a' in option else False
 	if "l" in option:
 		dic["nameOnly"] = False
 		# Set relative attribute values:
 		dic["sortByTime"]=True if "t" in option else False
-		dic["sortByDescOrder"]=True if "t" in option else False
 		dic["humanRead"]=True if "h" in option else False
 		dic["reverseOrder"]=True if "r" in option else False
 	# Use dictionary instead.
@@ -129,18 +128,16 @@ def setargument(option):
 
 class Arg(object):
 	
-	def __init__(self,showHiddenItem=False, nameOnly=False, sortByTime=False, sortByDescOrder=False, reverseOrder=False, humanRead=False):
+	def __init__(self,showHiddenItem=False, nameOnly=False, sortByTime=False, reverseOrder=False, humanRead=False):
 		self.showHiddenItem= showHiddenItem
 		self.nameOnly = nameOnly
 		self.sortByTime = sortByTime
-		self.sortByDescOrder = sortByDescOrder
 		self.reverseOrder = reverseOrder
 		self.humanRead = humanRead
 		
-		# self.showHiddenItem, self.nameOnly, self.sortByTime, self.sortByDescOrder, self.reverseOrder, self.humanRead=argvlist.split(',')	
 	# print self.showHiddenItem		# Why can't I call the self.showHiddenItem value in class scope?
 	def setVar(self,argvlist):
-		showHiddenItem, nameOnly, sortByTime, sortByDescOrder, reverseOrder, humanRead=argvlist.split(',')
+		showHiddenItem, nameOnly, sortByTime, reverseOrder, humanRead=argvlist.split(',')
 
 
 class ItemInfo(object):			# First char in class name should be uppercase.

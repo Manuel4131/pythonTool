@@ -4,13 +4,13 @@
 #import sys;
 #import glob;
 
-from __future__ import print_function
+# from __future__ import print_function
 import os, sys, time, inspect, operator; # ; against P8
 from datetime import datetime;
 
 # Use shell script 'time' instead!.  Built-in module called 
 
-K=1024.
+K=1024.			
 def getPermission(file, type):
 	perSt=""
 	if type:
@@ -84,13 +84,6 @@ def printFormat(args, path):
 				printFile(item)
 			elif item.filetype == 0:
 				printDir(item)
-	# elif args.nameOnly == 'n':
-	# 	abspath = createAbspath(items)
-	# 	for i in range(0, len(items)):
-	# 		if os.path.isfile(abspath[i]):
-	# 			printFile(abspath[i],items[i])
-	# 		elif os.path.isdir(abspath[i]):
-	# 			printDir(abspath[i],items[i])
 
 
 def ls(argv):
@@ -177,7 +170,7 @@ def removeHiddenFile_(fileList): # Avoid use keyword as variable name
 	return newItemList
 
 
-def createItems(path):
+def createItems(path):			
 	itemsList=[]
 	items = os.listdir(path)
 	abspath = os.path.abspath(path)	

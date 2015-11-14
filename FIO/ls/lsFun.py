@@ -63,8 +63,8 @@ def createAbspath(list):
 def printFormat(args, path):
 	items =createItems(path)
 # Set the list element according the argument attribute	
-	if args.showHiddenItem:			# without 'a'
-		items = removeHiddenFile_(items)
+	if not args.showHiddenItem:			# without 'a'
+		items = removeHiddenFile(items)
 
 	if args.nameOnly:				# without 'l'
 		for item in items:
@@ -75,9 +75,9 @@ def printFormat(args, path):
 
 	 	if args.sortByTime:			# with 't'
 	 		if args.reverseOrder:	# with 'r' or not
-	 			items.sort(key=operator.attrgetter("mtime"),reverse= True)
-	 		else:
 	 			items.sort(key=operator.attrgetter("mtime"),reverse= False)
+	 		else:
+	 			items.sort(key=operator.attrgetter("mtime"),reverse= True)
 
 	 	for item in items:
 	 		if item.filetype == 1:				# type{0,1,2}, {dir, file, others}
@@ -108,28 +108,18 @@ def setargument(option):
 	
 	if "a" not in option:
 		showHiddenItem=False
-	if "l" in option:
-		nameOnly=False
-		if "t" in option:
-			sortByTime=True
-			sortByDescOrder=True
-		if "h" in option:
-			humanRead=True			
-		if "r" in option:
-			reverseOrder=True
-	# Use dictionary instead.
-	# #opts={}
-	# opts['reverse_Order'] = 'y' if 'r' in option else 'n'
-	# opts['reverse_Order2'] = 'y' if 'r' in option else 'n'
-	# arg = Args(**opts)
-	# class Args(object):
+	
+	showHiddenItem, nameOnly, sortByTime =  False, True, False
+	humanRead, reverseOrder=  False, False 
 	dic={}
-	dic["showHiddenItem"] = showHiddenItem
-	dic["nameOnly"] = nameOnly
-	dic["sortByTime"] = sortByTime
-	dic["sortByDescOrder"] = sortByDescOrder
-	dic["reverseOrder"] = reverseOrder
-	dic["humanRead"] = humanRead
+	dic["showHiddenItem"]= True if 'a' in option else False
+	if "l" in option:
+		dic["nameOnly"] = False
+		# Set relative attribute values:
+		dic["sortByTime"]=True if "t" in option else False
+		dic["humanRead"]=True if "h" in option else False
+		dic["reverseOrder"]=True if "r" in option else False
+	# Use dictionary instead.
 
 	arg=Arg(**dic)
 	return arg
@@ -137,13 +127,16 @@ def setargument(option):
 
 class Arg(object):
 	
-	def __init__(self,showHiddenItem=False, nameOnly=False, sortByTime=False, sortByDescOrder=False, reverseOrder=False, humanRead=False):
+	def __init__(self,showHiddenItem=False, nameOnly=False, sortByTime=False, reverseOrder=False, humanRead=False):
 		self.showHiddenItem= showHiddenItem
 		self.nameOnly = nameOnly
 		self.sortByTime = sortByTime
-		self.sortByDescOrder = sortByDescOrder
 		self.reverseOrder = reverseOrder
 		self.humanRead = humanRead
+		
+	# print self.showHiddenItem		# Why can't I call the self.showHiddenItem value in class scope?
+	def setVar(self,argvlist):
+		showHiddenItem, nameOnly, sortByTime, reverseOrder, humanRead=argvlist.split(',')
 
 
 class ItemInfo(object):			# First char in class name should be uppercase.
@@ -167,6 +160,10 @@ class ItemInfo(object):			# First char in class name should be uppercase.
 def removeHiddenFile_(fileList): # Avoid use keyword as variable name
 	newItemList=[]
 	newItemList= [x for x in fileList if not x.itemName.startswith('.')]
+
+def removeHiddenFile(argList): # list is a default class name, ID/			highlight_
+	newItemList=[]
+	newItemList= [x for x in argList if not x.itemName.startswith('.')]
 	return newItemList
 
 

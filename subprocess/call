@@ -5,9 +5,9 @@ import shlex;
 import sys;
 #subprocess.call(['ifconfig','p2p0']);
 
-inputString= raw_input("Input command")
+inputString= raw_input("Input command: ")
 
-print "inputString: " + inputString
+print "The input command is: " + inputString
 #cmdline=inputString.split(' ')
 
 cmdline=shlex.split(inputString);
@@ -17,13 +17,9 @@ print  cmdline
 subprocess.Popen(cmdline);
 
 # Test Popen with file name containing special char.(Works)
-
 #arglist=['cat','\\\\asdf']
 #subprocess.Popen(arglist);
 
 #For wildcard char '*', you can't put it in a list. It will definitely fail.
-
 #subprocess.Popen("cat *", shell=True);
-
 #arglist2=['cat','\*']          //Not working. Use Shell=True instead.
-

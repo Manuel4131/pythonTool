@@ -1,14 +1,9 @@
 #!/usr/bin/python
-import getopt
-import sys
+
+import argparse
+
+parser = argparse.ArgumentParser(description='Process some integers.')
+# parser=argparse.ArgumentParser()
+# parser.add_arugment("echo")
 
 
-optpair,args =getopt.getopt(sys.argv[1:],"hl:t:")
-
-for opt, optArg in optpair:
-	
-	if opt == '-h':
-		print "file size"
-	elif opt == '-l':
-		print "File: " + optArg
-	

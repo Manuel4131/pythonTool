@@ -1,14 +1,10 @@
 #!/usr/bin/python
 
-#import os;
-#import sys;
-#import glob;
 
 # from __future__ import print_function
 import os, sys, time, inspect, operator; # ; against P8
 from datetime import datetime;
 
-# Use shell script 'time' instead!.  Built-in module called 
 
 K=1024.			
 def getPermission(file, type):
@@ -33,7 +29,7 @@ def translateUnit(bits):
 		d=d+1
 	bits=round(bits,2)
 	return repr(bits) + units[0]
-	# more case: the item may contain '/''
+
 	
 def getDirSize(targetPath):		
 	totalSize=0
@@ -62,7 +58,7 @@ def createAbspath(list):
 
 def printFormat(args, path):
 	items =createItems(path)
-# Set the list element according the argument attribute	
+
 	if not args.showHiddenItem:			# without 'a'
 		items = removeHiddenFile(items)
 
@@ -101,8 +97,6 @@ def ls(argv):
 
 # Print main function
 def setargument(option):
-	# itemList= os.listdir(target)	# Change itemList to object list
-# use enum or dict instead, plz
 	showHiddenItem, nameOnly, sortByTime, = True, True, False  
 	sortByDescOrder, humanRead, reverseOrder = False, False, False
 	

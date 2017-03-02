@@ -1,12 +1,13 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 
 
-# from __future__ import print_function
-import os, sys, time, inspect, operator; # ; against P8
+import os, sys, time, inspect, operator; 
 from datetime import datetime;
 
 
-K=1024.			
+K=1024.
+
 def getPermission(file, type):
 	perSt=""
 	if type:
@@ -38,7 +39,7 @@ def getDirSize(targetPath):
 			totalSize += os.path.getsize(os.path.join(rootDir,file))
 	return totalSize
 
-# Change the api to have another argument: fileSize which is decieded by the attribute 'h'	
+
 def printFile(item):
 	print (('%s') % (getPermission(item.targetPath,0) + '\t')), (('%s') % (item.itemName +'\t')), ( ('%s') % ( translateUnit(os.path.getsize(item.targetPath))) + '\t' ), ( ('%s') % ( time.ctime( item.mtime ) + '\t' ) )
 
@@ -55,18 +56,17 @@ def createAbspath(list):
 		i+=1
 	return absPath
 
-
 def printFormat(args, path):
 	items =createItems(path)
 
-	if not args.showHiddenItem:			# without 'a'
+	if not args.showHiddenItem:			
 		items = removeHiddenFile(items)
 
-	if args.nameOnly:				# without 'l'
+	if args.nameOnly:				
 		for item in items:
 			print (('%s') % (item.itemName + '\t')),	
-	elif not args.nameOnly:				# with 'l'		
-		for i in items:					# Set time attribute:
+	elif not args.nameOnly:			
+		for i in items:				
 		 	i.setmtime()	
 
 	 	if args.sortByTime:			# with 't'
@@ -166,10 +166,9 @@ def createItems(path):
 	items = os.listdir(path)
 	abspath = os.path.abspath(path)	
 	for i in items:
-		item = ItemInfo(abspath, i)		# Ticket 2
-		itemsList.append(item)					# list 
+		item = ItemInfo(abspath, i)
+		itemsList.append(item)
 	return itemsList
-
 
 ls(sys.argv)
 # print "Passed time:	", datetime.now() -startime
